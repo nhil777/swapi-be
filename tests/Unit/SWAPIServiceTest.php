@@ -42,8 +42,7 @@ class SWAPIServiceTest extends TestCase
 
     public function test_search_movies_method()
     {
-        $this->searchResults = $this->swapi->searchMovies('w');
-        dd($this->searchResults);
+        $this->searchResults = $this->swapi->searchMovies('Attack of the Clones');
         $this->assertSearchResults([
             'title',
             'episode_id',
