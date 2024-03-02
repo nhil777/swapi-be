@@ -35,6 +35,17 @@ class SWAPIService
     }
 
     /**
+     * Get person details from the Star Wars API.
+     *
+     * @param int $id The ID of the person to retrieve
+     * @return object|null JSON decoded response if successful, null otherwise
+     */
+    public function getPersonDetails(int $id): ?object
+    {
+        return $this->makeRequest(self::TYPE_PEOPLE.'/'.$id);
+    }
+
+    /**
      * Search for movies in the Star Wars API.
      *
      * @param string $query Search query string
@@ -43,6 +54,17 @@ class SWAPIService
     public function searchMovies(string $query): ?object
     {
         return $this->makeRequest(self::TYPE_MOVIES, $query);
+    }
+
+    /**
+     * Get movie details from the Star Wars API.
+     *
+     * @param int $id The ID of the movie to retrieve
+     * @return object|null JSON decoded response if successful, null otherwise
+     */
+    public function getMovieDetails(int $id): ?object
+    {
+        return $this->makeRequest(self::TYPE_MOVIES.'/'.$id);
     }
 
     /**
