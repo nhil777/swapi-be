@@ -7,6 +7,9 @@ use GuzzleHttp\Exception\RequestException;
 
 class SWAPIService
 {
+    const TYPE_PEOPLE = 'people';
+    const TYPE_MOVIES = 'films';
+
     private $baseUrl = 'https://swapi.dev/api/';
     private $client;
 
@@ -20,11 +23,39 @@ class SWAPIService
         ]);
     }
 
-    // TODO: validate $type (people or movies only)
-    // TODO: validate $option -- same as $type
+    /**
+     * Search for people in the Star Wars API.
+     *
+     * @param string $query Search query string
+     * @return mixed|null JSON decoded response if successful, null otherwise
+     */
+    public function searchPeople(string $query): ?object
+    {
+        return $this->makeRequest(self::TYPE_PEOPLE, $query);
+    }
 
-    private function makeRequest (string $option, string $query = null) {
-        $uri = $query ? $option."?{$query}" : $option;
+    /**
+     * Search for movies in the Star Wars API.
+     *
+     * @param string $query Search query string
+     * @return mixed|null JSON decoded response if successful, null otherwise
+     */
+    public function searchMovies(string $query): ?object
+    {
+        return $this->makeRequest(self::TYPE_MOVIES, $query);
+    }
+
+    /**
+     * Make a request to the Star Wars API.
+     *
+     * @param string $type Type of resource (people or films)
+     * @param string|null $query Optional query string
+     * @return mixed|null JSON decoded response if successful, null otherwise
+     */
+    private function makeRequest(string $type, ?string $query = null): ?object
+    {
+        // Construct the URI
+        $uri = $query ? $type.'?search='.urlencode($query) : $type;
 
         try {
             $response = $this->client->request('GET', $uri);
@@ -32,25 +63,6 @@ class SWAPIService
             $response = $e->getResponse();
         }
 
-        return json_decode($response->getBody()->getContents());
-    }
-
-    public function search(string $option, string $query)
-    {
-        if ($option === 'people') {
-            return $this->searchPeople($query);
-        } else {
-            return $this->searchMovies($query);
-        }
-    }
-
-    private function searchPeople(string $query)
-    {
-        return $this->makeRequest('people', $query);
-    }
-
-    private function searchMovies(string $query)
-    {
-        return $this->makeRequest('movies', $query);
+        return $response ? json_decode($response->getBody()->getContents()) : null;
     }
 }
