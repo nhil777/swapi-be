@@ -42,7 +42,7 @@ class SWAPIService
      */
     public function getPersonDetails(int $id): ?array
     {
-        return $this->makeRequest(self::TYPE_PEOPLE.'/'.$id);
+        return $this->makeRequest(self::TYPE_PEOPLE, resourceId: $id);
     }
 
     /**
@@ -64,7 +64,7 @@ class SWAPIService
      */
     public function getMovieDetails(int $id): ?array
     {
-        return $this->makeRequest(self::TYPE_MOVIES.'/'.$id);
+        return $this->makeRequest(self::TYPE_MOVIES, resourceId: $id);
     }
 
     /**
@@ -74,9 +74,9 @@ class SWAPIService
      * @param string|null $query Optional query string
      * @return array|null JSON decoded response if successful, null otherwise
      */
-    private function makeRequest(string $type, ?string $query = null): ?array
+    private function makeRequest(string $type, ?string $query = null, ?int $resourceId = null): ?array
     {
-        $uri = $this->constructUri($type, $query);
+        $uri = $this->constructUri($type, $query, $resourceId);
 
         try {
             $response = $this->client->request('GET', $uri);
@@ -84,7 +84,83 @@ class SWAPIService
             $response = $e->getResponse();
         }
 
-        return $this->parseResponse($response);
+        return $this->parseResponse($response, $type, $resourceId !== null);
+    }
+
+    private function parseResponse(?object $response, string $type, bool $isDetails = false): ?array
+    {
+        if (!$response || $response->getStatusCode() === 404) {
+            return [];
+        }
+
+        $decodedResponse = json_decode($response->getBody()->getContents(), true);
+        $results = isset($decodedResponse['results']) ? $decodedResponse['results'] : $decodedResponse;
+
+        switch ($type) {
+            case self::TYPE_PEOPLE:
+                return $this->processPeople($results, $isDetails);
+                break;
+            case self::TYPE_MOVIES:
+                return $this->processMovies($results, $isDetails);
+                break;
+            default:
+                return $results;
+        }
+    }
+
+    private function processPeople(array $people, bool $details = false): array
+    {
+        if ($details) {
+            return $this->processPerson($people);
+        }
+
+        return array_map(function ($person) {
+            return $this->processPerson($person);
+        }, $people);
+    }
+
+    private function processPerson(array $person): array
+    {
+        $person['id'] = $this->extractIdFromUrl($person['url']);
+
+        return [
+            'id' => $person['id'],
+            'name' => $person['name'],
+            'birth_year' => $person['birth_year'],
+            'gender' => $person['gender'],
+            'eye_color' => $person['eye_color'],
+            'hair_color' => $person['hair_color'],
+            'height' => $person['height'],
+            'mass' => $person['mass'],
+        ];
+    }
+
+    private function processMovies(array $movies, bool $details = false): array
+    {
+        if ($details) {
+            return $this->processMovie($movies);
+        }
+
+        return array_map(function ($movie) {
+            return $this->processMovie($movie);
+        }, $movies);
+    }
+
+    private function processMovie(array $movie): array
+    {
+        $movie['id'] = $this->extractIdFromUrl($movie['url']);
+
+        return [
+            'id' => $movie['id'],
+            'title' => $movie['title'],
+            'opening_crawl' => $movie['opening_crawl'],
+        ];
+    }
+
+    private function extractIdFromUrl(string $url): ?int
+    {
+        $parts = explode('/', rtrim($url, '/'));
+        return (int) end($parts);
     }
 
     /**
@@ -94,23 +170,16 @@ class SWAPIService
      * @param string|null $query An optional search query string.
      * @return string The constructed URI.
      */
-    private function constructUri(string $type, ?string $query): string
+    private function constructUri(string $type, ?string $query, ?int $resourceId = null): string
     {
         if ($query !== null) {
             return "{$type}?search={$query}";
         }
 
-        return $type;
-    }
-
-    private function parseResponse(object $response): ?array
-    {
-        if ($response && $response->getBody()) {
-            $decodedResponse = json_decode($response->getBody()->getContents(), true);
-
-            return isset($decodedResponse['results']) ? $decodedResponse['results'] : $decodedResponse;
+        if ($resourceId !== null) {
+            return "{$type}/{$resourceId}";
         }
 
-        return null;
+        return $type;
     }
 }

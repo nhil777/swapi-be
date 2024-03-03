@@ -12,6 +12,23 @@ class SearchController extends Controller
     {
         $query = $request->get('query');
 
-        return response()->json($type);
+        if ($type === 'people') {
+            $searchResults = $swapi->searchPeople($query);
+        } else if ($type === 'movies') {
+            $searchResults = $swapi->searchMovies($query);
+        }
+
+        return response()->json($searchResults);
+    }
+
+    public function details($type, $id, SWAPIService $swapi)
+    {
+        if ($type === 'people') {
+            $details = $swapi->getPersonDetails($id);
+        } else if ($type ==='movies') {
+            $details = $swapi->getMovieDetails($id);
+        }
+
+        return response()->json($details);
     }
 }

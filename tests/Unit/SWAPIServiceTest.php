@@ -23,22 +23,14 @@ class SWAPIServiceTest extends TestCase
         $this->assertNotEmpty($searchResults);
 
         $this->assertDetailsResult([
+            'id',
             'name',
-            'height',
-            'mass',
-            'hair_color',
-            'skin_color',
-            'eye_color',
             'birth_year',
             'gender',
-            'homeworld',
-            'films',
-            'species',
-            'vehicles',
-            'starships',
-            'created',
-            'edited',
-            'url',
+            'eye_color',
+            'hair_color',
+            'height',
+            'mass',
         ], $searchResults[0]);
     }
 
@@ -49,22 +41,14 @@ class SWAPIServiceTest extends TestCase
         $this->assertNotEmpty($personDetails);
 
         $this->assertDetailsResult([
+            'id',
             'name',
-            'height',
-            'mass',
-            'hair_color',
-            'skin_color',
-            'eye_color',
             'birth_year',
             'gender',
-            'homeworld',
-            'films',
-            'species',
-            'vehicles',
-            'starships',
-            'created',
-            'edited',
-            'url',
+            'eye_color',
+            'hair_color',
+            'height',
+            'mass',
         ], $personDetails);
     }
 
@@ -72,9 +56,7 @@ class SWAPIServiceTest extends TestCase
     {
         $personDetails = $this->swapi->getMovieDetails(999);
 
-        $this->assertNotEmpty($personDetails);
-        $this->assertArrayHasKey('detail', $personDetails);
-        $this->assertEquals('Not found', $personDetails['detail']);
+        $this->assertEmpty($personDetails);
     }
 
     public function test_search_movies_method()
@@ -83,22 +65,7 @@ class SWAPIServiceTest extends TestCase
 
         $this->assertNotEmpty($searchResults);
 
-        $this->assertDetailsResult([
-            'title',
-            'episode_id',
-            'opening_crawl',
-            'director',
-            'producer',
-            'release_date',
-            'characters',
-            'planets',
-            'starships',
-            'vehicles',
-            'species',
-            'created',
-            'edited',
-            'url',
-        ], $searchResults[0]);
+        $this->assertDetailsResult(['title', 'opening_crawl', 'id'], $searchResults[0]);
     }
 
     public function test_get_movie_details_method()
@@ -107,31 +74,14 @@ class SWAPIServiceTest extends TestCase
 
         $this->assertNotEmpty($movieDetails);
 
-        $this->assertDetailsResult([
-            'title',
-            'episode_id',
-            'opening_crawl',
-            'director',
-            'producer',
-            'release_date',
-            'characters',
-            'planets',
-            'starships',
-            'vehicles',
-            'species',
-            'created',
-            'edited',
-            'url',
-        ], $movieDetails);
+        $this->assertDetailsResult(['title', 'opening_crawl', 'id'], $movieDetails);
     }
 
     public function test_get_unexistent_movie_details_method()
     {
         $movieDetails = $this->swapi->getMovieDetails(999);
 
-        $this->assertNotEmpty($movieDetails);
-        $this->assertArrayHasKey('detail', $movieDetails);
-        $this->assertEquals('Not found', $movieDetails['detail']);
+        $this->assertEmpty($movieDetails);
     }
 
     private function assertDetailsResult(array $expectedKeys, array $resultArray)
