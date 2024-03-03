@@ -34,6 +34,13 @@ class SWAPIServiceTest extends TestCase
         ], $searchResults[0]);
     }
 
+    public function test_search_people_method_with_no_results()
+    {
+        $searchResults = $this->swapi->searchPeople('Lorem Ipsum');
+
+        $this->assertEmpty($searchResults);
+    }
+
     public function test_get_person_details_method()
     {
         $personDetails = $this->swapi->getPersonDetails(10);
@@ -66,6 +73,13 @@ class SWAPIServiceTest extends TestCase
         $this->assertNotEmpty($searchResults);
 
         $this->assertDetailsResult(['title', 'opening_crawl', 'id'], $searchResults[0]);
+    }
+
+    public function test_search_movies_method_with_no_results()
+    {
+        $searchResults = $this->swapi->searchMovies('Lorem Ipsum');
+
+        $this->assertEmpty($searchResults);
     }
 
     public function test_get_movie_details_method()
