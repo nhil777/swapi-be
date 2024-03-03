@@ -29,6 +29,6 @@ class SearchController extends Controller
             $details = $swapi->getMovieDetails($id);
         }
 
-        return response()->json($details);
+        return response()->json($details, sizeof($details) > 0 ? 200 : 404);
     }
 }
