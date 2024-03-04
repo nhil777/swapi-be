@@ -6,27 +6,29 @@ It is built with Laravel v10, utilizing the StarWars API Service located at [`ap
 
 ## Initial Setup
 
-1. Create a Docker network:
+1. Copy `.env.example` to a new file `.env`
+
+2. Create a Docker network:
     ```bash
     docker network create kool_global
     ```
 
-2. Launch the application:
+3. Launch the application:
     ```bash
     docker-compose up -d
     ```
 
-3. Access the application container:
+4. Access the application container:
     ```bash
     docker exec -it swapi-be_app_1 bash
     ```
 
-4. Install dependencies:
+5. Install dependencies:
     ```bash
     composer install
     ```
 
-5. Generate application key:
+6. Generate application key:
     ```bash
     php artisan key:generate
     ```
@@ -36,7 +38,7 @@ Now, you can access the API at `http://localhost`.
 ### Endpoints
 - Search for a person:
     ```
-    http://localhost/api/details/people?search=Yoda
+    http://localhost/api/search/people?query=Yoda
     ```
 
 - Fetch details about a specific person:
@@ -46,7 +48,7 @@ Now, you can access the API at `http://localhost`.
 
 - Search for a movie:
     ```
-    http://localhost/api/details/movies?search=Attack
+    http://localhost/api/search/movies?query=Attack
     ```
 
 - Fetch details about a specific movie:
