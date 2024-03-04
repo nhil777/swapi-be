@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\DetailsController;
+use App\Http\Controllers\StatisticsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/search/{type}', [SearchController::class, 'search']);
-Route::get('/details/{type}/{id}', [SearchController::class, 'details']);
-Route::get('/statistics', [SearchController::class, 'statistics']);
+Route::get('/search/{type}', [SearchController::class, 'index']);
+Route::get('/details/{type}/{id}', [DetailsController::class, 'index']);
+Route::get('/statistics', [StatisticsController::class, 'index']);
