@@ -8,7 +8,7 @@ class StatisticsCalculator
 {
     public function getMostPopularHour()
     {
-        return Redis::get('statistics:mostPopularHour');
+        return json_decode(Redis::get('statistics:mostPopularHour'));
     }
 
     public function getTopQueries()

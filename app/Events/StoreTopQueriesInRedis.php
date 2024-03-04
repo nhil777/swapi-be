@@ -13,6 +13,9 @@ class StoreTopQueriesInRedis implements ShouldQueue
 
     public function handle(TopQueriesComputed $event): void
     {
-        Redis::set('statistics:topQueries', json_encode($event->topQueries));
+        Redis::set('statistics:topQueries', json_encode([
+            'created_at' => time(),
+            'data' => $event->topQueries,
+        ]));
     }
 }

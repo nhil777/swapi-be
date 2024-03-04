@@ -4,6 +4,8 @@ This repository contains a backend integration of the StarWars API. For the corr
 
 It is built with Laravel v10, utilizing the StarWars API Service located at [`app/services/SWAPIService`](https://github.com/nhil777/swapi-be/blob/main/app/Services/SWAPIService.php).
 
+In the background, using Redis, a job runs every five minutes to compute some useful statistics that can be accessed through the API endpoint. You can see the code [here](https://github.com/nhil777/swapi-be/blob/main/app/Jobs/ComputeStatistics.php).
+
 ## Initial Setup
 
 1. Copy `.env.example` to a new file `.env`
@@ -33,6 +35,16 @@ It is built with Laravel v10, utilizing the StarWars API Service located at [`ap
     php artisan key:generate
     ```
 
+7. Start `schedule:work`
+    ```bash
+    php artisan schedule:work
+    ```
+
+8. On a new terminal, start `queue:work`
+    ```bash
+    php artisan queue:work
+    ```
+
 Now, you can access the API at `http://localhost`.
 
 ### Endpoints
@@ -54,6 +66,11 @@ Now, you can access the API at `http://localhost`.
 - Fetch details about a specific movie:
     ```
     http://localhost/api/details/movies/2
+    ```
+
+- Query statistics:
+    ```
+    http://localhost/api/statistics
     ```
 
 ## Running Tests

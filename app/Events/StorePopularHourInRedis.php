@@ -12,6 +12,9 @@ class StorePopularHourInRedis
 
     public function handle(PopularHourComputed $event): void
     {
-        Redis::set('statistics:mostPopularHour', $event->popularHour);
+        Redis::set('statistics:mostPopularHour', json_encode([
+            'created_at' => time(),
+            'data' => $event->popularHour,
+        ]));
     }
 }
