@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\QueryLog as QueryLogEvent;
 use App\Http\Controllers\Controller;
+use App\Loggers\QueryLog;
 use App\Services\SWAPIService;
 use Illuminate\Http\Request;
 
@@ -18,6 +20,8 @@ class SearchController extends Controller
             $searchResults = $swapi->searchMovies($query);
         }
 
+        QueryLogEvent::dispatch($type, 'search', $query, time());
+
         return response()->json($searchResults);
     }
 
@@ -29,6 +33,13 @@ class SearchController extends Controller
             $details = $swapi->getMovieDetails($id);
         }
 
+        QueryLogEvent::dispatch($type, 'details', $id, time());
+
         return response()->json($details, sizeof($details) > 0 ? 200 : 404);
+    }
+
+    public function getLogs()
+    {
+        return QueryLog::getLogs();
     }
 }

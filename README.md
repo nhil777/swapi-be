@@ -73,3 +73,4 @@ Now, you can access the API at `http://localhost`.
 - [ ] Enhance error handling
 - [ ] Remove unnecessary default Laravel files
 - [ ] Refactor the SWAPIService for better modularity and maintainability
+- [ ] Move App\Loggers\QueryLog up the chain
