@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.3"
 #
 # Services definitions
 #
@@ -58,7 +58,6 @@ networks:
   kool_local:
   kool_global:
     external: true
-    name: "${KOOL_GLOBAL_NETWORK:-kool_global}"
 volumes:
   database:
   cache:
