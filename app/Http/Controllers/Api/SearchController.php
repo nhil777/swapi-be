@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\QueryLog as QueryLogEvent;
 use App\Http\Controllers\Controller;
-use App\Loggers\QueryLog;
+use App\Services\StatisticsCalculator;
 use App\Services\SWAPIService;
 use Illuminate\Http\Request;
 
@@ -38,8 +38,10 @@ class SearchController extends Controller
         return response()->json($details, sizeof($details) > 0 ? 200 : 404);
     }
 
-    public function getLogs()
-    {
-        return QueryLog::getLogs();
+    public function statistics(StatisticsCalculator $calculator) {
+        return response()->json([
+            'popularHour' => $calculator->getMostPopularHour(),
+            'topQueries' => $calculator->getTopQueries(),
+        ]);
     }
 }

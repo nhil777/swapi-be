@@ -21,4 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/search/{type}', [SearchController::class, 'search']);
 Route::get('/details/{type}/{id}', [SearchController::class, 'details']);
-Route::get('/logs', [SearchController::class, 'getLogs']);
+Route::get('/statistics', [SearchController::class, 'statistics']);
