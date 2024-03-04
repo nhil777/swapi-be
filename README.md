@@ -1,4 +1,4 @@
-# StarWars API Backend Integration
+# SWAPI-BE: StarWars API Backend
 
 This repository contains a backend integration of the StarWars API. For the corresponding frontend, please visit [here](https://github.com/nhil777/swapi-fe).
 
